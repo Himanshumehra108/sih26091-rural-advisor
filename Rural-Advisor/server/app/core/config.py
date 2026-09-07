@@ -5,6 +5,12 @@ class Settings(BaseSettings):
     database_url: str = 'postgresql+psycopg://postgres:postgres@localhost:5432/rural_advisor'
     jwt_secret_key: str = 'change-me'
     llm_api_key: str | None = None
+    llm_provider: str = 'openai'  # openai | anthropic | groq | openai_compatible
+    llm_model: str | None = None
+    llm_base_url: str | None = None
+    llm_max_tokens: int = 2048
+    llm_temperature: float = 0.3
+    llm_timeout_seconds: float = 45.0
     bhashini_api_key: str | None = None
 
     # OpenStreetMap stack (Nominatim + Overpass + OSRM). Public demos are
