@@ -1,6 +1,31 @@
 # server/app/services/emi_engine.py
 
-from typing import List, Dict
+from typing import Dict, List
+
+
+def calculate_emi_schedule(
+    principal: float,
+    annual_interest_rate: float,
+    tenure_years: int,
+) -> Dict:
+    """Compatibility wrapper for the older monthly EMI contract used in tests."""
+    months = max(1, tenure_years * 12)
+    monthly_rate = annual_interest_rate / 100 / 12
+
+    if monthly_rate == 0:
+        monthly_emi = principal / months
+    else:
+        monthly_emi = (
+            principal * monthly_rate * (1 + monthly_rate) ** months
+        ) / (((1 + monthly_rate) ** months) - 1)
+
+    return {
+        "principal": round(principal, 2),
+        "annual_interest_rate": annual_interest_rate,
+        "tenure_years": tenure_years,
+        "months": months,
+        "monthly_emi": round(monthly_emi, 2),
+    }
 
 
 def calculate_quarterly_emi(

@@ -1,8 +1,10 @@
 """
 vector_store.py
 ---------------
-Persistent vector store backed by Chroma for advisory document retrieval.
+Persistent vector store backed by Chroma for advisory
+ document retrieval.
 """
+
 
 from __future__ import annotations
 
