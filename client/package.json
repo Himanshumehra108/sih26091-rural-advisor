@@ -14,6 +14,11 @@
     "build": "react-scripts build",
     "test": "react-scripts test"
   },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not op_mini all"
+  ],
   "devDependencies": {
     "react-scripts": "^5.0.1"
   }

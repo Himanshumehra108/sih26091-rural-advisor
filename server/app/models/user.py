@@ -1,18 +1,12 @@
-# server/app/models/user.py
+from sqlalchemy import String
+from sqlalchemy.orm import Mapped, mapped_column
 
-import uuid
-from sqlalchemy import Column, String, DateTime
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.sql import func
-from app.core.database import Base
+from app.models.base import Base
 
 
 class User(Base):
-    __tablename__ = "users"
+    __tablename__ = 'users'
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    name = Column(String, nullable=False)
-    phone = Column(String, unique=True, nullable=False, index=True)
-    hashed_password = Column(String, nullable=False)
-    preferred_language = Column(String, default="en")
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    id: Mapped[int] = mapped_column(primary_key=True)
+    email: Mapped[str] = mapped_column(String(255), unique=True, index=True)
+    password_hash: Mapped[str] = mapped_column(String(255))

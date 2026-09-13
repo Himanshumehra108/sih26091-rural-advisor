@@ -24,6 +24,8 @@ TERM_LOAN_SCHEME = {
     "moratorium_months": 6,
 }
 
+MARGIN_CUTOFF = MICRO_FINANCE_SCHEME["max_project_cost"] * MARGIN_PERCENTAGE
+
 # ─── Business Categories (for Module 1 dropdown/validation) ──
 
 BUSINESS_CATEGORIES = [

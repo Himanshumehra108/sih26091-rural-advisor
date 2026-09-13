@@ -1,20 +1,11 @@
-# server/app/schemas/user.py
-
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
 
-class UserRegister(BaseModel):
-    name: str
-    phone: str
-    password: str
-    preferred_language: str = "en"
-
-
-class UserLogin(BaseModel):
-    phone: str
+class UserCreate(BaseModel):
+    email: EmailStr
     password: str
 
 
 class UserResponse(BaseModel):
-    user_id: str
-    token: str
+    id: int
+    email: EmailStr
