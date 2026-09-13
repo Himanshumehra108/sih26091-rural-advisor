@@ -1,15 +1,13 @@
-# server/app/services/emi_engine.py
-
 from typing import Dict, List
 
 
 def calculate_emi_schedule(
     principal: float,
     annual_interest_rate: float,
-    tenure_years: int,
+    tenure_months: int,
 ) -> Dict:
     """Compatibility wrapper for the older monthly EMI contract used in tests."""
-    months = max(1, tenure_years * 12)
+    months = max(1, tenure_months)
     monthly_rate = annual_interest_rate / 100 / 12
 
     if monthly_rate == 0:
@@ -22,11 +20,9 @@ def calculate_emi_schedule(
     return {
         "principal": round(principal, 2),
         "annual_interest_rate": annual_interest_rate,
-        "tenure_years": tenure_years,
         "months": months,
         "monthly_emi": round(monthly_emi, 2),
     }
-
 
 def calculate_quarterly_emi(
     loan_amount: float,
@@ -34,12 +30,6 @@ def calculate_quarterly_emi(
     tenure_years: int,
     moratorium_months: int,
 ) -> Dict:
-    """
-    Calculates quarterly EMI using reducing balance method.
-    Moratorium period is interest-only (or fully deferred, per scheme norms) —
-    here we assume simple interest accrues during moratorium and is added to principal.
-    """
-
     quarterly_rate = (annual_interest_rate / 100) / 4
     total_quarters = tenure_years * 4
     moratorium_quarters = round(moratorium_months / 3)
@@ -86,7 +76,6 @@ def generate_amortization_schedule(
     emi: float,
     moratorium_quarters: int,
 ) -> List[Dict]:
-    """Generates quarter-by-quarter breakdown after moratorium ends."""
     schedule = []
     balance = principal
 
