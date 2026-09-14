@@ -1,5 +1,13 @@
-import React from 'react';
+import React from "react";
 
-export default function PricingSuggestion({ price }) {
-  return <section><h2>Suggested pricing</h2><p>{price}</p></section>;
+export default function PricingSuggestion({ pricing }) {
+  if (!pricing) return null;
+  const { suggested_price_range, reasoning } = pricing;
+
+  return (
+    <section className="pricing-card" aria-label="Pricing suggestion">
+      <div className="pricing-range">{suggested_price_range || "—"}</div>
+      <p>{reasoning}</p>
+    </section>
+  );
 }
