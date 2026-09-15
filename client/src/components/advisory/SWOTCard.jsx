@@ -1,4 +1,5 @@
 import React from "react";
+import { useLanguage } from "../../context/LanguageContext";
 
 const QUADRANTS = [
   { key: "strengths", title: "Strengths", icon: "💪", className: "swot-strengths" },
@@ -10,20 +11,21 @@ const QUADRANTS = [
 // Renders the full 2x2 SWOT grid from the backend's `swot` object:
 // { strengths: [], weaknesses: [], opportunities: [], threats: [] }
 export default function SWOTCard({ swot }) {
+  const { t } = useLanguage();
   if (!swot) return null;
 
   return (
     <div className="swot-grid">
-      {QUADRANTS.map(({ key, title, icon, className }) => (
+      {QUADRANTS.map(({ key, icon, className }) => (
         <div key={key} className={`swot-quadrant ${className}`}>
           <h3>
-            {icon} {title}
+            {icon} {t(`swot.${key}`)}
           </h3>
           <ul>
             {(swot[key] || []).length > 0 ? (
               swot[key].map((item, i) => <li key={i}>{item}</li>)
             ) : (
-              <li className="swot-empty">Nothing flagged here.</li>
+              <li className="swot-empty">{t("swot.empty")}</li>
             )}
           </ul>
         </div>

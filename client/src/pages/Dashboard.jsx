@@ -4,9 +4,11 @@ import Navbar from "../components/common/Navbar";
 import Loader from "../components/common/Loader";
 import { useAuth } from "../context/AuthContext";
 import { listReports } from "../services/api";
+import { useLanguage } from "../context/LanguageContext";
 
 export default function Dashboard() {
   const { isAuthenticated, user } = useAuth();
+  const { t } = useLanguage();
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -21,7 +23,7 @@ export default function Dashboard() {
         const data = await listReports();
         if (!cancelled) setReports(Array.isArray(data) ? data : []);
       } catch (err) {
-        if (!cancelled) setError(err.message || "Couldn't load your saved reports.");
+        if (!cancelled) setError(err.message || t("dashboard.loadFailed"));
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -36,21 +38,21 @@ export default function Dashboard() {
       <Navbar />
       <main className="page">
         <div className="page-header">
-          <div className="page-badge">📊 YOUR REPORTS</div>
-          <h1>{isAuthenticated ? `Welcome back, ${user?.name}` : "Saved reports"}</h1>
-          <p>Every feasibility report you save shows up here.</p>
+          <div className="page-badge">📊 {t("dashboard.badge")}</div>
+          <h1>{isAuthenticated ? t("dashboard.welcomeBack", { name: user?.name }) : t("dashboard.savedReports")}</h1>
+          <p>{t("dashboard.subtitle")}</p>
         </div>
 
         {loading && (
           <div className="empty-result">
-            <Loader label="Loading your reports…" />
+            <Loader label={t("dashboard.loading")} />
           </div>
         )}
 
         {!loading && error && (
           <div className="empty-result">
             <div className="empty-icon">⚠️</div>
-            <h3>Couldn't load reports</h3>
+            <h3>{t("dashboard.loadFailedTitle")}</h3>
             <p>{error}</p>
           </div>
         )}
@@ -58,10 +60,10 @@ export default function Dashboard() {
         {!loading && !error && reports.length === 0 && (
           <div className="empty-result">
             <div className="empty-icon">📊</div>
-            <h3>No saved reports yet</h3>
-            <p>Generate a feasibility report and save it to see it here.</p>
+            <h3>{t("dashboard.emptyTitle")}</h3>
+            <p>{t("dashboard.emptyBody")}</p>
             <Link to="/feasibility" className="primary-button">
-              Check my business →
+              {t("dashboard.checkBusiness")}
             </Link>
           </div>
         )}
@@ -71,8 +73,8 @@ export default function Dashboard() {
             {reports.map((report, i) => (
               <div key={i} className="report-card">
                 <div className="report-icon">📄</div>
-                <h3>{report._meta?.businessCategory || report.business_category || "Report"}</h3>
-                <p>{report.opportunity_analysis || "Saved report"}</p>
+                <h3>{report._meta?.businessCategory || report.business_category || t("common.report")}</h3>
+                <p>{report.opportunity_analysis || t("common.savedReport")}</p>
               </div>
             ))}
           </section>

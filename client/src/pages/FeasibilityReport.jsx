@@ -6,8 +6,10 @@ import MarketReachMap from "../components/advisory/MarketReachMap";
 import CompetitorChart from "../components/advisory/CompetitorChart";
 import PricingSuggestion from "../components/advisory/PricingSuggestion";
 import { saveReport } from "../services/api";
+import { useLanguage } from "../context/LanguageContext";
 
 function FeasibilityReport() {
+  const { t } = useLanguage();
   const stored = sessionStorage.getItem("feasibilityReport");
   const report = stored ? JSON.parse(stored) : null;
 
@@ -20,10 +22,10 @@ function FeasibilityReport() {
         <main className="page">
           <div className="empty-result">
             <div className="empty-icon">📊</div>
-            <h2>No report found</h2>
-            <p>Generate a feasibility report first.</p>
+            <h2>{t("report.noReport")}</h2>
+            <p>{t("report.generateFirst")}</p>
             <Link to="/feasibility" className="primary-button">
-              Create report →
+              {t("report.createReport")}
             </Link>
           </div>
         </main>
@@ -34,9 +36,6 @@ function FeasibilityReport() {
   const { market_reach, opportunity_analysis, swot, competitor_density, pricing_suggestion, _meta } = report;
 
   const handleSave = async () => {
-    // NOTE: server/app/api/v1/routes_reports.py exists but is not yet
-    // registered in main.py — this call will 404 until that's wired up
-    // backend-side. See INTEGRATION_NOTES.md.
     try {
       setSaveState("saving");
       await saveReport({ ...report });
@@ -53,12 +52,12 @@ function FeasibilityReport() {
       <main className="page report-page">
         <div className="report-header">
           <div>
-            <div className="page-badge">FEASIBILITY REPORT</div>
+            <div className="page-badge">{t("report.badge")}</div>
             <h1>{_meta?.businessCategory || "Your Business"}</h1>
             <p>
               📍 {[_meta?.location?.village, _meta?.location?.block, _meta?.location?.district, _meta?.location?.state]
                 .filter(Boolean)
-                .join(", ") || "Your location"}
+                .join(", ") || t("report.yourLocation")}
             </p>
           </div>
 
@@ -67,14 +66,13 @@ function FeasibilityReport() {
             onClick={handleSave}
             disabled={saveState === "saving" || saveState === "saved"}
           >
-            {saveState === "saved" ? "✅ Saved" : saveState === "saving" ? "Saving…" : "💾 Save report"}
+            {saveState === "saved" ? `✅ ${t("report.saved")}` : saveState === "saving" ? t("report.saving") : `💾 ${t("report.saveReport")}`}
           </button>
         </div>
 
         {saveState === "error" && (
           <div className="error-message">
-            ⚠️ Couldn't save this report right now — the reports endpoint may not be
-            enabled on the backend yet.
+            ⚠️ {t("report.saveError")}
           </div>
         )}
 
@@ -82,11 +80,11 @@ function FeasibilityReport() {
           <div className="card-heading">
             <span>💡</span>
             <div>
-              <small>MARKET INSIGHT</small>
-              <h2>What looks promising?</h2>
+              <small>{t("report.marketInsight")}</small>
+              <h2>{t("report.promising")}</h2>
             </div>
           </div>
-          <p>{opportunity_analysis || "Your opportunity analysis will appear here."}</p>
+          <p>{opportunity_analysis || t("report.opportunityFallback")}</p>
         </section>
 
         <section className="report-grid">
@@ -99,15 +97,15 @@ function FeasibilityReport() {
           <div className="card-heading">
             <span>🧭</span>
             <div>
-              <small>SWOT</small>
-              <h2>A full picture, at a glance</h2>
+              <small>{t("report.swot")}</small>
+              <h2>{t("report.fullPicture")}</h2>
             </div>
           </div>
           <SWOTCard swot={swot} />
         </section>
 
         <details className="debug-response">
-          <summary>Developer: view complete API response</summary>
+          <summary>{t("common.developerCompleteApi")}</summary>
           <pre>{JSON.stringify(report, null, 2)}</pre>
         </details>
       </main>

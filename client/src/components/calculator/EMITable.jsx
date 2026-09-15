@@ -1,10 +1,12 @@
 import React from "react";
 import { formatCurrency } from "../../utils/formatCurrency";
+import { useLanguage } from "../../context/LanguageContext";
 
 // Renders the exact schedule array returned by
 // POST /api/v1/calculator/emi-schedule: one row per quarter, each with
 // { quarter, phase, principal_paid, interest_paid, emi, balance }.
 export default function EMITable({ schedule = [] }) {
+  const { t } = useLanguage();
   if (schedule.length === 0) return null;
 
   return (
@@ -12,12 +14,12 @@ export default function EMITable({ schedule = [] }) {
       <table className="emi-table">
         <thead>
           <tr>
-            <th>Quarter</th>
-            <th>Phase</th>
-            <th>Principal</th>
-            <th>Interest</th>
-            <th>EMI</th>
-            <th>Balance</th>
+            <th>{t("emi.quarter")}</th>
+            <th>{t("emi.phase")}</th>
+            <th>{t("emi.principal")}</th>
+            <th>{t("emi.interest")}</th>
+            <th>{t("emi.emi")}</th>
+            <th>{t("emi.balance")}</th>
           </tr>
         </thead>
         <tbody>

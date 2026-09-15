@@ -1,8 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../components/common/Navbar";
+import { useLanguage } from "../context/LanguageContext";
 
 function Home() {
+  const { t } = useLanguage();
   return (
     <>
       <Navbar />
@@ -13,18 +15,16 @@ function Home() {
           <div className="hero-content">
 
             <div className="hero-badge">
-              🌱 Built for rural entrepreneurs
+              🌱 {t("home.badge")}
             </div>
 
             <h1>
-              Start your business
-              <span> with confidence.</span>
+              {t("home.title")}
+              <span> {t("home.titleAccent")}</span>
             </h1>
 
             <p>
-              Find out which business could work in your area
-              and understand how much funding you may be able
-              to access.
+              {t("home.subtitle")}
             </p>
 
             <div className="hero-buttons">
@@ -33,14 +33,14 @@ function Home() {
                 to="/feasibility"
                 className="primary-button"
               >
-                📍 Check my business
+                📍 {t("home.checkBusiness")}
               </Link>
 
               <Link
                 to="/calculator"
                 className="secondary-button"
               >
-                💰 Calculate my loan
+                💰 {t("home.calculateLoan")}
               </Link>
 
             </div>
@@ -52,8 +52,8 @@ function Home() {
             <div className="floating-card card-one">
               <span>👥</span>
               <div>
-                <strong>Market</strong>
-                <small>Potential customers</small>
+                    <strong>{t("home.market")}</strong>
+                    <small>{t("home.potentialCustomers")}</small>
               </div>
             </div>
 
@@ -76,8 +76,8 @@ function Home() {
             <div className="floating-card card-two">
               <span>💰</span>
               <div>
-                <strong>Funding</strong>
-                <small>Loan & EMI estimate</small>
+                    <strong>{t("home.funding")}</strong>
+                    <small>{t("home.loanEmi")}</small>
               </div>
             </div>
 
@@ -88,8 +88,8 @@ function Home() {
         <section className="features">
 
           <div className="section-heading">
-            <span>HOW IT WORKS</span>
-            <h2>Two questions. One simple tool.</h2>
+            <span>{t("home.howItWorks")}</span>
+            <h2>{t("home.twoQuestions")}</h2>
           </div>
 
           <div className="feature-grid">
@@ -98,15 +98,14 @@ function Home() {
               <div className="feature-number">01</div>
               <div className="feature-icon">📍</div>
 
-              <h3>Can my business work here?</h3>
+              <h3>{t("home.canBusinessWork")}</h3>
 
               <p>
-                Get a simple feasibility report based on
-                your location, business and available capital.
+                {t("home.feasibilityBlurb")}
               </p>
 
               <Link to="/feasibility">
-                Check business →
+                {t("home.checkBusinessLink")}
               </Link>
             </div>
 
@@ -114,15 +113,14 @@ function Home() {
               <div className="feature-number">02</div>
               <div className="feature-icon">💰</div>
 
-              <h3>How much can I borrow?</h3>
+              <h3>{t("home.howMuchBorrow")}</h3>
 
               <p>
-                Enter your own contribution and understand
-                your possible project size, loan and repayment.
+                {t("home.loanBlurb")}
               </p>
 
               <Link to="/calculator">
-                Calculate loan →
+                {t("home.calculateLoanLink")}
               </Link>
             </div>
 

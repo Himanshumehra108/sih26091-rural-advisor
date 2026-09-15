@@ -99,6 +99,7 @@ export const getFeasibilityReport = async ({
       block: location.block,
       district: location.district,
       state: location.state,
+      pincode: location.pincode,
     },
     available_margin: Number(availableMargin),
     language,
@@ -108,11 +109,20 @@ export const getFeasibilityReport = async ({
   //      competitor_density, pricing_suggestion }
 };
 
+// Dynamic AI/user content translation. Static UI strings live in src/locales;
+// this endpoint is only for text whose content is not known at build time.
+export const translateText = async ({ text, sourceLanguage = "en-IN", targetLanguage }) => {
+  const response = await api.post("/api/v1/translate", {
+    text,
+    source_language: sourceLanguage,
+    target_language: targetLanguage,
+  });
+  return unwrap(response)?.translated_text || text;
+};
+
 // -----------------------------------------------------------------------
 // Reports — matches server/app/api/v1/routes_reports.py
-// NOTE: this router is not yet registered in server/app/main.py.
-// These calls will 404 until that's fixed backend-side. See
-// INTEGRATION_NOTES.md.
+// Reports are registered under /api/v1/reports on the backend.
 // -----------------------------------------------------------------------
 
 export const listReports = async () => {

@@ -1,11 +1,13 @@
 import React from "react";
+import { useLanguage } from "../../context/LanguageContext";
 
 export default function Footer() {
+  const { t } = useLanguage();
   return (
     <footer className="site-footer">
-      <span>🌾 Rural Business Advisor</span>
+      <span>🌾 {t("footer.brand")}</span>
       <span className="site-footer-note">
-        Feasibility &amp; loan guidance for rural entrepreneurs
+        {t("footer.note")}
       </span>
     </footer>
   );

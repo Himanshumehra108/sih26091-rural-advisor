@@ -5,7 +5,7 @@ import { useLanguage } from "../../context/LanguageContext";
 import { useAuth } from "../../context/AuthContext";
 
 function Navbar() {
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
   const { isAuthenticated, user, logout } = useAuth();
 
   return (
@@ -13,23 +13,23 @@ function Navbar() {
       <Link to="/" className="nav-brand">
         <div className="brand-icon">🌾</div>
         <div>
-          <div className="brand-name">Rural Advisor</div>
-          <div className="brand-subtitle">Business made simple</div>
+          <div className="brand-name">{t("brand.name")}</div>
+          <div className="brand-subtitle">{t("brand.subtitle")}</div>
         </div>
       </Link>
 
       <div className="nav-links">
         <NavLink to="/" end className={({ isActive }) => (isActive ? "active" : "")}>
-          Home
+          {t("nav.home")}
         </NavLink>
         <NavLink to="/calculator" className={({ isActive }) => (isActive ? "active" : "")}>
-          Loan Calculator
+          {t("nav.loanCalculator")}
         </NavLink>
         <NavLink to="/feasibility" className={({ isActive }) => (isActive ? "active" : "")}>
-          Business Check
+          {t("nav.businessCheck")}
         </NavLink>
         <NavLink to="/dashboard" className={({ isActive }) => (isActive ? "active" : "")}>
-          Saved Reports
+          {t("nav.savedReports")}
         </NavLink>
 
         <LanguageSelector value={language} onChange={setLanguage} />
@@ -40,7 +40,7 @@ function Navbar() {
           </button>
         ) : (
           <Link to="/login" className="language-btn">
-            Log in
+            {t("nav.logIn")}
           </Link>
         )}
       </div>

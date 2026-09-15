@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 
 import { AuthProvider } from "./context/AuthContext";
-import { LanguageProvider } from "./context/LanguageContext";
+import { LanguageProvider, useLanguage } from "./context/LanguageContext";
 import useOfflineSync from "./hooks/useOfflineSync";
 
 import Home from "./pages/Home";
@@ -17,11 +17,10 @@ import Footer from "./components/common/Footer";
 
 function OfflineBanner() {
   const { isOnline } = useOfflineSync();
+  const { t } = useLanguage();
   if (isOnline) return null;
   return (
-    <div className="offline-banner">
-      ⚠️ You're offline — some data may be out of date until you reconnect.
-    </div>
+    <div className="offline-banner">⚠️ {t("offline")}</div>
   );
 }
 

@@ -1,29 +1,31 @@
 import React from "react";
 import { formatCurrency } from "../../utils/formatCurrency";
+import { useLanguage } from "../../context/LanguageContext";
 
 function SchemeCard({ scheme, interest, tenure, loan, capped, message }) {
+  const { t } = useLanguage();
   return (
     <div className="scheme-card">
       <div className="scheme-top">
         <div>
-          <small>RECOMMENDED SCHEME</small>
-          <h2>🏦 {scheme || "Loan Scheme"}</h2>
+          <small>{t("scheme.recommended")}</small>
+          <h2>🏦 {scheme || t("scheme.loanScheme")}</h2>
         </div>
-        {capped && <span className="capped-badge">Capped</span>}
+        {capped && <span className="capped-badge">{t("scheme.capped")}</span>}
       </div>
 
       <div className="scheme-details">
         <div>
-          <span>Loan amount</span>
+          <span>{t("scheme.loanAmount")}</span>
           <strong>{formatCurrency(loan)}</strong>
         </div>
         <div>
-          <span>Interest</span>
+          <span>{t("scheme.interest")}</span>
           <strong>{interest || "—"}%</strong>
         </div>
         <div>
-          <span>Tenure</span>
-          <strong>{tenure || "—"} years</strong>
+          <span>{t("scheme.tenure")}</span>
+          <strong>{tenure || "—"} {t("common.years", { count: "" }).trim()}</strong>
         </div>
       </div>
 

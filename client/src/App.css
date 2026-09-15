@@ -1187,6 +1187,68 @@ a {
   flex: 1;
 }
 
+.location-autocomplete {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.location-autocomplete .text-input {
+  width: 100%;
+}
+
+.location-suggestions {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 20;
+  max-height: 220px;
+  overflow-y: auto;
+  padding: 6px;
+  background: #fff;
+  border: 1px solid #dfe4dd;
+  border-radius: 10px;
+  box-shadow: 0 10px 24px rgba(23, 61, 42, 0.12);
+}
+
+.location-suggestion {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #17221b;
+  text-align: left;
+  cursor: pointer;
+}
+
+.location-suggestion:hover,
+.location-suggestion.active {
+  background: #eef4ed;
+  color: #173d2a;
+}
+
+.location-no-results,
+.location-status {
+  color: #8a4b31;
+  font-size: 12px;
+}
+
+.location-no-results {
+  padding: 10px 12px;
+}
+
+.pincode-field {
+  flex-wrap: wrap;
+}
+
+.pincode-field .location-status {
+  flex-basis: 100%;
+  min-height: 16px;
+}
+
 /* ================================
    VOICE INPUT BUTTON
 ================================ */

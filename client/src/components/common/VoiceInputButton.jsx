@@ -1,10 +1,12 @@
 import React from "react";
 import useSpeechInput from "../../hooks/useSpeechInput";
+import { useLanguage } from "../../context/LanguageContext";
 
 // Drop this into any text field to let the user speak instead of type —
 // used on FeasibilityForm for the location fields. Falls back to a
 // disabled, tooltip-explained button on browsers without speech support.
 export default function VoiceInputButton({ onTranscript, language = "en-IN" }) {
+  const { t } = useLanguage();
   const { isListening, isSupported, start, transcript } = useSpeechInput(language);
 
   React.useEffect(() => {
@@ -17,7 +19,7 @@ export default function VoiceInputButton({ onTranscript, language = "en-IN" }) {
         type="button"
         className="voice-button voice-button-disabled"
         disabled
-        title="Voice input isn't supported in this browser"
+        title={t("voice.unsupported")}
       >
         🎙️
       </button>
@@ -29,9 +31,9 @@ export default function VoiceInputButton({ onTranscript, language = "en-IN" }) {
       type="button"
       className={isListening ? "voice-button listening" : "voice-button"}
       onClick={start}
-      title="Speak instead of typing"
+      title={t("voice.speak")}
     >
-      {isListening ? "🎙️ Listening…" : "🎙️"}
+      {isListening ? `🎙️ ${t("voice.listening")}` : "🎙️"}
     </button>
   );
 }

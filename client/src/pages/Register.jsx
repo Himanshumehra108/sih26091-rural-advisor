@@ -3,10 +3,12 @@ import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../components/common/Navbar";
 import { useAuth } from "../context/AuthContext";
 import { isRequired } from "../utils/validators";
+import { useLanguage } from "../context/LanguageContext";
 
 export default function Register() {
   const { register } = useAuth();
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -17,11 +19,11 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isRequired(email) || !isRequired(password)) {
-      setError("Please enter both email and password.");
+      setError(t("register.required"));
       return;
     }
     if (password.length < 6) {
-      setError("Password should be at least 6 characters.");
+      setError(t("register.passwordLength"));
       return;
     }
     try {
@@ -34,7 +36,7 @@ export default function Register() {
       await register(email, password, name);
       navigate("/dashboard");
     } catch (err) {
-      setError(err.message || "Could not create your account. Please try again.");
+      setError(err.message || t("register.failed"));
     } finally {
       setLoading(false);
     }
@@ -45,23 +47,23 @@ export default function Register() {
       <Navbar />
       <main className="page auth-page">
         <div className="auth-card">
-          <div className="page-badge">🌱 GET STARTED</div>
-          <h1>Create an account</h1>
-          <p>Save your feasibility reports and come back to them anytime.</p>
+          <div className="page-badge">🌱 {t("register.badge")}</div>
+          <h1>{t("register.title")}</h1>
+          <p>{t("register.subtitle")}</p>
 
           <form onSubmit={handleSubmit} className="auth-form">
             <label>
-              Name
+              {t("register.name")}
               <input
                 className="text-input"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Your name"
+                placeholder={t("register.namePlaceholder")}
               />
             </label>
 
             <label>
-              Email
+              {t("register.email")}
               <input
                 type="email"
                 className="text-input"
@@ -72,25 +74,25 @@ export default function Register() {
             </label>
 
             <label>
-              Password
+              {t("register.password")}
               <input
                 type="password"
                 className="text-input"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="At least 6 characters"
+                placeholder={t("register.passwordPlaceholder")}
               />
             </label>
 
             {error && <div className="error-message">⚠️ {error}</div>}
 
             <button className="generate-button" type="submit" disabled={loading}>
-              {loading ? "Creating account…" : "Create account →"}
+              {loading ? t("register.submitting") : t("register.submit")}
             </button>
           </form>
 
           <p className="auth-switch">
-            Already have an account? <Link to="/login">Log in</Link>
+            {t("register.haveAccount")} <Link to="/login">{t("register.logIn")}</Link>
           </p>
         </div>
       </main>
