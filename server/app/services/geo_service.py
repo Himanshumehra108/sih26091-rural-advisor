@@ -14,6 +14,7 @@ import httpx
 
 from app.core.config import settings
 from app.core.constants import DEFAULT_MARKET_RADIUS_KM
+from app.services.population_service import get_population
 
 logger = logging.getLogger(__name__)
 
@@ -127,7 +128,7 @@ def location_query(location: str | Mapping[str, Any]) -> str:
     if isinstance(location, str):
         return location.strip()
     parts: list[str] = []
-    for key in ("village", "block", "district", "state"):
+    for key in ("village", "block", "district", "state", "pincode"):
         value = location.get(key)
         if value:
             parts.append(str(value).strip())
@@ -409,14 +410,6 @@ def driving_distances(
         return fallback, "haversine"
 
 
-def _consumer_base(places: Sequence[Mapping[str, Any]]) -> int:
-    total = 0
-    for place in places:
-        if place.get("kind") == "settlement":
-            total += int(place.get("estimated_population") or 0)
-    return total
-
-
 def _unique_channels(places: Sequence[Mapping[str, Any]]) -> list[str]:
     ordered: list[str] = []
     seen: set[str] = set()
@@ -459,6 +452,15 @@ def market_reach(
     routed_pois = [place for place in routed if place["kind"] != "settlement"]
     routed_settlements = [place for place in routed if place["kind"] == "settlement"]
     competitors = [place for place in routed_pois if place.get("is_competitor")]
+    location_population = get_population(
+        latitude=origin["lat"],
+        longitude=origin["lon"],
+        village=location.get("village") if isinstance(location, Mapping) else None,
+        district=location.get("district") if isinstance(location, Mapping) else None,
+        state=location.get("state") if isinstance(location, Mapping) else None,
+        pincode=location.get("pincode") if isinstance(location, Mapping) else None,
+        places=routed_settlements,
+    )
 
     return {
         "location": origin["query"],
@@ -468,7 +470,9 @@ def market_reach(
             "display_name": origin["display_name"],
         },
         "radius_km": radius_km,
-        "estimated_consumer_base": _consumer_base(routed_settlements),
+        "population": location_population,
+        # Kept as a compatibility field; it is never fabricated or zero-filled.
+        "estimated_consumer_base": location_population["population"],
         "distribution_channels": _unique_channels(routed_pois),
         "places": routed_pois,
         "settlements": routed_settlements,

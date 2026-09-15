@@ -6,10 +6,12 @@ import os
 from dataclasses import dataclass
 
 import requests
+import httpx
 
 PIPELINE_CONFIG_URL = "https://meity-auth.ulcacontrib.org/ulca/apis/v0/model/getModelsPipeline"
 INFERENCE_TASK_TRANSLATION = "translation"
 DEFAULT_PIPELINE_ID = "64392f96daac500b55c543cd"
+SARVAM_TRANSLATE_URL = "https://api.sarvam.ai/translate"
 
 
 @dataclass
@@ -106,3 +108,27 @@ def transcribe_audio(audio: bytes) -> str:
 
 def synthesize_speech(text: str, language: str) -> bytes:
     return text.encode("utf-8")
+
+
+def translate_with_sarvam(text: str, source_language: str, target_language: str) -> str:
+    """Translate dynamic text without ever sending credentials to the client."""
+    api_key = os.environ.get("SARVAM_API_KEY")
+    if not api_key:
+        raise RuntimeError("SARVAM_API_KEY is not configured")
+
+    response = httpx.post(
+        SARVAM_TRANSLATE_URL,
+        headers={"api-subscription-key": api_key, "Content-Type": "application/json"},
+        json={
+            "input": text,
+            "source_language_code": source_language,
+            "target_language_code": target_language,
+            "model": "mayura:v1",
+        },
+        timeout=20,
+    )
+    response.raise_for_status()
+    translated = response.json().get("translated_text")
+    if not translated:
+        raise RuntimeError("Sarvam returned no translated text")
+    return translated

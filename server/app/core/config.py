@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     llm_temperature: float = 0.3
     llm_timeout_seconds: float = 45.0
     bhashini_api_key: str | None = None
+    sarvam_api_key: str | None = None
 
     # OpenStreetMap stack (Nominatim + Overpass + OSRM). Public demos are
     # rate-limited; point these at self-hosted instances for production.

@@ -15,6 +15,7 @@ class LocationInput(BaseModel):
     block: str
     district: str
     state: str
+    pincode: str | None = None
 
 
 class FeasibilityRequest(BaseModel):
@@ -29,7 +30,15 @@ def feasibility_report(payload: FeasibilityRequest):
     # TEMPORARY DUMMY DATA — SWOT/pricing still placeholders until RAG + LLM (Module 1)
     market = {
         "radius_km": DEFAULT_MARKET_RADIUS_KM,
-        "estimated_consumer_base": 4200,
+        "population": {
+            "population": None,
+            "population_level": None,
+            "area_name": None,
+            "source": None,
+            "year": None,
+            "status": "unavailable",
+        },
+        "estimated_consumer_base": None,
         "distribution_channels": ["local haat", "direct doorstep", "nearby mandi"],
     }
     competitors = {"estimated_count": 6, "saturation_level": "medium"}
@@ -65,6 +74,8 @@ def feasibility_report(payload: FeasibilityRequest):
             "origin": geo["origin"],
             "places": geo["places"][:15],
             "distance_source": geo["distance_source"],
+            "population": geo["population"],
+            "estimated_consumer_base": geo["estimated_consumer_base"],
         }
         competitors = geo["competitor_density"]
     except Exception:

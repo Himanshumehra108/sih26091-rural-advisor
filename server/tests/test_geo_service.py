@@ -6,6 +6,94 @@ from app.services.geo_service import (
     parse_overpass_elements,
     saturation_level,
 )
+from app.services.population_service import get_population
+
+
+def test_population_uses_explicit_village_tag_without_estimating():
+    result = get_population(
+        state="Haryana",
+        district="Hisar",
+        village="Rampur",
+        places=[{
+            "kind": "settlement",
+            "name": "Rampur",
+            "estimated_population": 1842,
+            "tags": {"place": "village", "population": "1842"},
+            "straight_line_km": 1.2,
+        }],
+    )
+
+    assert result == {
+        "population": 1842,
+        "population_level": "village",
+        "area_name": "Rampur",
+        "source": "OpenStreetMap population tag",
+        "year": None,
+        "status": "success",
+    }
+
+
+def test_population_is_unavailable_when_source_has_no_population():
+    result = get_population(
+        state="Haryana",
+        district="Not a real district",
+        village="Unknown village",
+        places=[{
+            "kind": "settlement",
+            "name": "Hisar",
+            "estimated_population": None,
+            "tags": {"place": "town"},
+            "straight_line_km": 1.2,
+        }],
+    )
+
+    assert result["population"] is None
+    assert result["population_level"] is None
+    assert result["status"] == "unavailable"
+
+
+def test_population_does_not_use_unrelated_nearby_village():
+    result = get_population(
+        state="Haryana",
+        district="Hisar",
+        village="Rampur",
+        places=[{
+            "kind": "settlement",
+            "name": "Other village",
+            "estimated_population": 5000,
+            "tags": {"place": "village", "population": "5000"},
+            "straight_line_km": 0.5,
+        }],
+    )
+
+    assert result["status"] == "success"
+    assert result["population"] == 1743931
+    assert result["population_level"] == "district"
+
+
+def test_population_falls_back_to_census_district(monkeypatch):
+    import app.services.population_service as population_service
+
+    monkeypatch.setattr(
+        population_service,
+        "_census_cache",
+        [{"state": "haryana", "district": "jind", "population": 1334152}],
+    )
+    result = get_population(
+        state="Haryana",
+        district="Jind",
+        village="Narwana",
+        places=[],
+    )
+
+    assert result == {
+        "population": 1334152,
+        "population_level": "district",
+        "area_name": "Jind",
+        "source": "Census of India 2011 district dataset",
+        "year": 2011,
+        "status": "success",
+    }
 
 
 def test_location_query_joins_admin_parts():

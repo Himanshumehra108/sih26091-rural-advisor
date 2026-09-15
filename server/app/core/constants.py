@@ -46,11 +46,15 @@ BUSINESS_CATEGORIES = [
 SUPPORTED_LANGUAGES = {
     "en": "English",
     "hi": "Hindi",
-    "mr": "Marathi",
-    "bn": "Bengali",
+    "pa": "Punjabi",
     "ta": "Tamil",
     "te": "Telugu",
-    # extend based on Bhashini's supported list
+    "mr": "Marathi",
+    "bn": "Bengali",
+    "gu": "Gujarati",
+    "kn": "Kannada",
+    "ml": "Malayalam",
+    "or": "Odia",
 }
 
 # ─── Market Reach Defaults ─────────────────────────────────────
